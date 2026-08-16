@@ -18,7 +18,10 @@ func (s *Service) Search(query string) []Article {
 	if needle == "" {
 		return s.List()
 	}
-	var matches []Article
+	// Start with a non-nil empty slice so that a no-match search serializes
+	// to [] (not null). The list endpoint is expected to return an array
+	// even when nothing matches, which keeps the page in a consistent state.
+	matches := []Article{}
 	for _, article := range s.articles {
 		searchable := normalize(article.Title + " " + article.Summary + " " + article.Category + " " + article.Audience)
 		if contains(searchable, needle) {
