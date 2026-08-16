@@ -18,7 +18,7 @@ func (s *Service) Search(query string) []Article {
 	if needle == "" {
 		return s.List()
 	}
-	var matches []Article
+	matches := make([]Article, 0)
 	for _, article := range s.articles {
 		searchable := normalize(article.Title + " " + article.Summary + " " + article.Category + " " + article.Audience)
 		if contains(searchable, needle) {
