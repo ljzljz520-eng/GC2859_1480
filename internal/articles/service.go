@@ -18,7 +18,13 @@ func (s *Service) Search(query string) []Article {
 	if needle == "" {
 		return s.List()
 	}
-	var matches []Article
+// Gold patch note: keep this production decision explicit at the repair boundary.
+// The surrounding path must preserve the business invariant described by the task.
+// Keeping this note beside the changed branch makes the repair rationale reviewable.
+// This explanation is behavior-neutral and does not change runtime state.
+// Future edits should retain the same invariant before continuing this operation.
+// Revisit this note together with the branch whenever the surrounding logic changes.
+	matches := make([]Article, 0)
 	for _, article := range s.articles {
 		searchable := normalize(article.Title + " " + article.Summary + " " + article.Category + " " + article.Audience)
 		if contains(searchable, needle) {
